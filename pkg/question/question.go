@@ -1,4 +1,4 @@
-// question holds functions for questions to the user.
+// Package question holds functions for questions to the user.
 package question
 
 import (

@@ -1,4 +1,4 @@
-// config handles writing config files and opening config files.
+// Package config handles writing config files and opening config files.
 package config
 
 import (
