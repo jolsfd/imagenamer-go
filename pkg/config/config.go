@@ -44,3 +44,10 @@ func WriteConfigFile(configDir string, configFile string) (err error) {
 	err = viper.WriteConfigAs(configFile)
 	return err
 }
+
+// DefaultConfig set default values to config.
+func DefaultConfig() {
+	viper.SetDefault("Format", DefaultFormat)
+	viper.SetDefault("Extensions", DefaultExtensions)
+	viper.SetDefault("SafePrefixes", DefaultSafePrefixes)
+}
