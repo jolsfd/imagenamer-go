@@ -2,6 +2,7 @@
 package config
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 
@@ -50,4 +51,15 @@ func DefaultConfig() {
 	viper.SetDefault("Format", DefaultFormat)
 	viper.SetDefault("Extensions", DefaultExtensions)
 	viper.SetDefault("SafePrefixes", DefaultSafePrefixes)
+}
+
+// CheckLoadError check if a error is containing a path error or a ConfigFileNotFoundError. It returns an error.
+func CheckLoadError(err error) error {
+	if err != nil {
+		pathErr := &os.PathError{}
+		if errors.As(err, &viper.ConfigFileNotFoundError{}) || errors.As(err, &pathErr) {
+			return errors.New(DefaultNoConfigError)
+		}
+	}
+	return nil
 }
