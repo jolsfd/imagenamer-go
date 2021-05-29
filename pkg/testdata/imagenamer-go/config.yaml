@@ -1,0 +1,11 @@
+extensions:
+- .jpg
+- .JPG
+- .jpeg
+- .JPEG
+- .png
+- .dng
+- .cr2
+format: IMG_DATETIME_MODEL
+safeprefixes:
+- IMG
