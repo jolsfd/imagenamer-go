@@ -8,7 +8,7 @@ import (
 	"github.com/mitchellh/go-homedir"
 )
 
-func TestGetHomeDir(t *testing.T) {
+func TestGetConfigDir(t *testing.T) {
 	homeDir, err := homedir.Dir()
 	checkError(err, t)
 
