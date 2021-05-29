@@ -1,6 +1,7 @@
 package config_test
 
 import (
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -91,6 +92,27 @@ func TestLoadNoConfig(t *testing.T) {
 	if err.Error() != config.DefaultNoConfigError {
 		t.Errorf("want = %s; got = %v", config.DefaultNoConfigError, err)
 	}
+}
+
+func TestWriteConfigFile(t *testing.T) {
+	viper.Reset()
+	var err error
+	configDir := "../testdata/temp"
+	configFile := "../testdata/temp/config.yaml"
+
+	viper.SetConfigName(config.DefaultConfigName)
+	viper.SetConfigType(config.DefaultConfigType)
+
+	config.DefaultConfig()
+
+	err = config.WriteConfigFile(configDir, configFile)
+	checkError(err, t)
+
+	err = os.Remove(configFile)
+	checkError(err, t)
+
+	err = os.Remove(configDir)
+	checkError(err, t)
 }
 
 func checkError(err error, t *testing.T) {
