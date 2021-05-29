@@ -23,5 +23,4 @@ func YesNo(message string) bool {
 		return true
 	}
 	return false
-
 }
