@@ -64,6 +64,19 @@ func TestDefaultConfig(t *testing.T) {
 	}
 }
 
+func TestLoadConfig(t *testing.T) {
+	viper.Reset()
+	configDir := "../testdata/imagenamer-go"
+
+	viper.SetConfigName(config.DefaultConfigName)
+	viper.SetConfigType(config.DefaultConfigType)
+	viper.AddConfigPath(configDir)
+
+	err := viper.ReadInConfig()
+	err = config.CheckLoadError(err)
+	checkError(err, t)
+}
+
 func checkError(err error, t *testing.T) {
 	if err != nil {
 		t.Error(err)
