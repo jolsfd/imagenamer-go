@@ -77,6 +77,22 @@ func TestLoadConfig(t *testing.T) {
 	checkError(err, t)
 }
 
+func TestLoadNoConfig(t *testing.T) {
+	viper.Reset()
+	configDir := "../testdata/NotExist"
+
+	viper.SetConfigName(config.DefaultConfigName)
+	viper.SetConfigType(config.DefaultConfigType)
+	viper.AddConfigPath(configDir)
+
+	err := viper.ReadInConfig()
+	err = config.CheckLoadError(err)
+
+	if err.Error() != config.DefaultNoConfigError {
+		t.Errorf("want = %s; got = %v", config.DefaultNoConfigError, err)
+	}
+}
+
 func checkError(err error, t *testing.T) {
 	if err != nil {
 		t.Error(err)
