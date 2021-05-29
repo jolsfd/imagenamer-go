@@ -14,3 +14,8 @@ func GetConfigDir() string {
 	}
 	return filepath.Join(configPath, "imagenamer-go")
 }
+
+// GetConfigFile returns a string with the absolute path to the settings.
+func GetConfigFile() string {
+	return filepath.Join(GetConfigDir(), DefaultConfigFileName)
+}
