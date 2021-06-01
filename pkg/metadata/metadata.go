@@ -3,6 +3,7 @@ package metadata
 
 import (
 	"os"
+	"strings"
 
 	"github.com/rwcarlsen/goexif/exif"
 )
@@ -22,4 +23,18 @@ func GetExif(sourceName string) (imageExif *exif.Exif, err error) {
 		return imageExif, err
 	}
 	return imageExif, err
+}
+
+// GetCameraModel returns a string with the camera model of the exif and an error.
+func GetCameraModel(imageExif *exif.Exif) (cameraModel string, err error) {
+	rawModel, err := imageExif.Get(exif.Model)
+	if err != nil {
+		return "", err
+	}
+	cameraModel, err = rawModel.StringVal()
+	if err != nil {
+		return "", err
+	}
+	cameraModel = strings.ReplaceAll(cameraModel, " ", "")
+	return cameraModel, nil
 }
