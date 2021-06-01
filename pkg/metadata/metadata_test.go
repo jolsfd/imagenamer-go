@@ -33,3 +33,19 @@ func TestGetCameraModel(t *testing.T) {
 		t.Errorf("Camera model = %s; want = %s;", got, want)
 	}
 }
+
+func TestGetDateTime(t *testing.T) {
+	want := "20200409_220822"
+	exif, err := metadata.GetExif(pathToImage)
+	if err != nil {
+		log.Fatal(err)
+	}
+	got, err := metadata.GetDateTime(exif)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if got != want {
+		t.Errorf("Datetime = %s; want = %s;", got, want)
+	}
+}
