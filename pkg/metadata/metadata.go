@@ -38,3 +38,20 @@ func GetCameraModel(imageExif *exif.Exif) (cameraModel string, err error) {
 	cameraModel = strings.ReplaceAll(cameraModel, " ", "")
 	return cameraModel, nil
 }
+
+// GetDateTime returns a formatted string with the original capture time of the image.
+func GetDateTime(imageExif *exif.Exif) (dateTime string, err error) {
+	rawDateTime, err := imageExif.Get(exif.DateTimeOriginal)
+	if err != nil {
+		return dateTime, err
+	}
+	// Format Datetime.
+	dateTime, err = rawDateTime.StringVal()
+	if err != nil {
+		return dateTime, err
+	}
+	dateTime = strings.ReplaceAll(dateTime, ":", ReplaceColonChar)
+	dateTime = strings.ReplaceAll(dateTime, " ", ReplaceSpaceChar)
+
+	return dateTime, err
+}
