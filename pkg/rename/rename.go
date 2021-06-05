@@ -4,6 +4,7 @@ package rename
 import (
 	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -100,4 +101,27 @@ func CheckFileExists(path string, sourceName string) bool {
 		}
 	}
 	return false
+}
+
+// ListImagesInDir search through a directory for files with extensions that match. If a directory is excluded it will skip this directory.
+func ListImagesInDir(rootPath string, extensions []string, excludedDirs []string, safeRename bool, safePrefixes []string) (list []string, err error) {
+	err = filepath.Walk(rootPath, func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() && find(excludedDirs, filepath.Base(path)) {
+			return filepath.SkipDir
+		}
+
+		if !info.IsDir() {
+			if safeRename {
+				if !checkSafePrefix(filepath.Base(path), safePrefixes) && find(extensions, filepath.Ext(path)) {
+					list = append(list, path)
+				}
+			} else {
+				if find(extensions, filepath.Ext(path)) {
+					list = append(list, path)
+				}
+			}
+		}
+		return nil
+	})
+	return list, err
 }
