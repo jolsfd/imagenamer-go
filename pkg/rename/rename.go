@@ -3,6 +3,7 @@ package rename
 
 import (
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/jolsfd/imagenamer-go/pkg/metadata"
@@ -49,4 +50,15 @@ func (f *FileAttributes) GetNewFileName(format string, imageExif *exif.Exif) err
 
 	f.NewFileName = format
 	return nil
+}
+
+// GetTargetName assign the target name into a FileAttributes struct.
+func (f *FileAttributes) GetTargetName() {
+	f.TargetName = filepath.Join(f.Path, f.NewFileName+f.FileExtension)
+
+	for CheckFileExists(f.Path, f.TargetName) {
+		newFileName := f.NewFileName + "~" + strconv.Itoa(f.CopyNumber)
+		f.TargetName = filepath.Join(f.Path, newFileName+f.FileExtension)
+		f.CopyNumber++
+	}
 }
