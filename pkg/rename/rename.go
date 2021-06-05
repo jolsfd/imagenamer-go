@@ -2,6 +2,8 @@
 package rename
 
 import (
+	"io/ioutil"
+	"log"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -80,6 +82,20 @@ func checkSafePrefix(baseName string, list []string) bool {
 		if len(baseName) < len(safePrefix) {
 			continue
 		} else if baseName[:len(safePrefix)] == safePrefix {
+			return true
+		}
+	}
+	return false
+}
+
+// CheckFileExists checks if a file is in a given dir.
+func CheckFileExists(path string, sourceName string) bool {
+	files, err := ioutil.ReadDir(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, file := range files {
+		if !file.IsDir() && filepath.Join(path, file.Name()) == sourceName {
 			return true
 		}
 	}
