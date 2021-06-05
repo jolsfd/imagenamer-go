@@ -4,6 +4,9 @@ package rename
 import (
 	"path/filepath"
 	"strings"
+
+	"github.com/jolsfd/imagenamer-go/pkg/metadata"
+	"github.com/rwcarlsen/goexif/exif"
 )
 
 type FileAttributes struct {
@@ -29,4 +32,21 @@ func (f *FileAttributes) BuildFileAttributes(sourceName string) {
 	f.FileName = fileName
 	f.FileExtension = extension
 	f.CopyNumber = DefaultCopyNumber
+}
+
+// GetNewFileName assign the new filename into a FileAttributes struct.
+func (f *FileAttributes) GetNewFileName(format string, imageExif *exif.Exif) error {
+	dateTime, err := metadata.GetDateTime(imageExif)
+	if err != nil {
+		return err
+	}
+	cameraModel, err := metadata.GetCameraModel(imageExif)
+	if err != nil {
+		return err
+	}
+	format = strings.ReplaceAll(format, "DATETIME", dateTime)
+	format = strings.ReplaceAll(format, "MODEL", cameraModel)
+
+	f.NewFileName = format
+	return nil
 }
