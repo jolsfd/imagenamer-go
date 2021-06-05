@@ -72,3 +72,16 @@ func find(slice []string, val string) bool {
 	}
 	return false
 }
+
+// checkSafePrefix checks if a file name contains a safe prefix.
+func checkSafePrefix(baseName string, list []string) bool {
+	for _, safePrefix := range list {
+		// Check lenght
+		if len(baseName) < len(safePrefix) {
+			continue
+		} else if baseName[:len(safePrefix)] == safePrefix {
+			return true
+		}
+	}
+	return false
+}
