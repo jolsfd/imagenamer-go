@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/fatih/color"
 	"github.com/jolsfd/imagenamer-go/pkg/metadata"
 	"github.com/rwcarlsen/goexif/exif"
 )
@@ -124,4 +125,37 @@ func ListImagesInDir(rootPath string, extensions []string, excludedDirs []string
 		return nil
 	})
 	return list, err
+}
+
+// RenameImages takes a sclice with source names and rename the files.
+func RenameImages(sourceNames []string, format string) error {
+	for _, sourceName := range sourceNames {
+		// Init FileAttributes struct.
+		var image FileAttributes
+		image.BuildFileAttributes(sourceName)
+
+		// Get image exif.
+		imageExif, err := metadata.GetExif(sourceName)
+		if err != nil {
+			color.Red("%s %v\n", image.SourceName, err)
+			continue
+		}
+
+		// Build new filename and target name.
+		err = image.GetNewFileName(format, imageExif)
+		if err != nil {
+			color.Red("%s %v\n", image.SourceName, err)
+			continue
+		}
+		image.GetTargetName()
+
+		// Rename image.
+		err = os.Rename(image.SourceName, image.TargetName)
+		if err != nil {
+			color.Red("%s %v\n", image.SourceName, err)
+			continue
+		}
+		color.Green("%s -> %s\n", image.SourceName, image.TargetName)
+	}
+	return nil
 }
