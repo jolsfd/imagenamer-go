@@ -62,3 +62,13 @@ func (f *FileAttributes) GetTargetName() {
 		f.CopyNumber++
 	}
 }
+
+// find checks if a value is in a sclice and return true or false.
+func find(slice []string, val string) bool {
+	for _, item := range slice {
+		if item == val {
+			return true
+		}
+	}
+	return false
+}
