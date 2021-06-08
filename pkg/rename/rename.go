@@ -140,7 +140,7 @@ func GetFileInformation(sourceNames []string, format string, debug bool) (files 
 		// Get image exif.
 		imageExif, err := metadata.GetExif(sourceName)
 		if err != nil {
-			image.Status = color.RedString("fail")
+			image.Status = color.RedString(StatusFail)
 			tableData = append(tableData, []string{image.FileName + image.FileExtension, image.NewFileName + image.FileExtension, image.Status})
 			if debug {
 				log.Print(color.RedString(err.Error()))
@@ -151,7 +151,7 @@ func GetFileInformation(sourceNames []string, format string, debug bool) (files 
 		// Build new filename.
 		err = image.GetNewFileName(format, imageExif)
 		if err != nil {
-			image.Status = color.RedString("fail")
+			image.Status = color.RedString(StatusFail)
 			tableData = append(tableData, []string{image.FileName + image.FileExtension, image.NewFileName + image.FileExtension, image.Status})
 			if debug {
 				log.Print(color.RedString(err.Error()))
@@ -162,7 +162,7 @@ func GetFileInformation(sourceNames []string, format string, debug bool) (files 
 		// Build new target name.
 		err = image.GetTargetName()
 		if err != nil {
-			image.Status = color.RedString("fail")
+			image.Status = color.RedString(StatusFail)
 			tableData = append(tableData, []string{image.FileName + image.FileExtension, image.NewFileName + image.FileExtension, image.Status})
 			if debug {
 				log.Print(color.RedString(err.Error()))
@@ -171,7 +171,7 @@ func GetFileInformation(sourceNames []string, format string, debug bool) (files 
 		}
 
 		// Set image status.
-		image.Status = color.GreenString("ok")
+		image.Status = color.GreenString(StatusOk)
 
 		// Append information to table.
 		tableData = append(tableData, []string{image.FileName + image.FileExtension, image.NewFileName + image.FileExtension, image.Status})
