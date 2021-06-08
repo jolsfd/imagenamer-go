@@ -1,6 +1,7 @@
 package rename_test
 
 import (
+	"os"
 	"testing"
 
 	"github.com/jolsfd/imagenamer-go/pkg/metadata"
@@ -151,4 +152,23 @@ func TestGetFileInformation(t *testing.T) {
 			}
 		}
 	}
+}
+
+func TestRenameImages(t *testing.T) {
+	err := rename.RenameImages([]rename.FileInformation{{
+		Path:          "../testdata",
+		SourceName:    sourceName,
+		TargetName:    "../testdata/IMG_20200409_220822_Pixel3a~2.jpg",
+		FileName:      "test_image",
+		NewFileName:   "IMG_20200409_220822_Pixel3a",
+		FileExtension: ".jpg",
+		CopyNumber:    2,
+		Status:        rename.StatusOk,
+	}})
+	if err != nil {
+		t.Error(err)
+	}
+
+	// Clean up.
+	os.Rename("../testdata/IMG_20200409_220822_Pixel3a~2.jpg", sourceName)
 }
