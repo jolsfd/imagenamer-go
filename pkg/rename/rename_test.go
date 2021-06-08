@@ -127,3 +127,28 @@ func TestListImagesInDir(t *testing.T) {
 	}
 
 }
+
+func TestGetFileInformation(t *testing.T) {
+	debug := true
+	format := "IMG_DATETIME_MODEL"
+	sourceNames := []string{"../testdata/IMG_20200409_220822_Pixel3a.jpg", "../testdata/excludeImages/excludeImage.jpg", "../testdata/test_image.jpg"}
+
+	wantTableData := [][]string{
+		{"IMG_20200409_220822_Pixel3a.jpg", "IMG_20200409_220822_Pixel3a.jpg", "ok"},
+		{"excludeImage.jpg", ".jpg", "fail"},
+		{"test_image.jpg", "IMG_20200409_220822_Pixel3a.jpg", "ok"},
+	}
+
+	_, tableData, err := rename.GetFileInformation(sourceNames, format, debug)
+	if err != nil {
+		t.Error(err)
+	}
+
+	for i := range tableData {
+		for j := range tableData[i] {
+			if tableData[i][j] != wantTableData[i][j] {
+				t.Errorf("want = %s, got = %s", tableData[i][j], wantTableData[i][j])
+			}
+		}
+	}
+}
