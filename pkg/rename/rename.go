@@ -22,6 +22,7 @@ type FileInformation struct {
 	NewFileName   string
 	FileExtension string
 	CopyNumber    int
+	Status        string
 }
 
 // BuildFileAttributes takes an source name as string. It assign values into the FileAttributes struct.
