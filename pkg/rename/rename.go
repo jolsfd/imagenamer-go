@@ -26,7 +26,7 @@ type FileInformation struct {
 }
 
 // BuildFileAttributes takes an source name as string. It assign values into the FileAttributes struct.
-func (f *FileInformation) BuildFileAttributes(sourceName string) {
+func (f *FileInformation) BuildFileInformation(sourceName string) {
 	// Get Values.
 	baseName := filepath.Base(sourceName)
 	extension := filepath.Ext(baseName)
@@ -135,7 +135,7 @@ func GetFileInformation(sourceNames []string, format string, debug bool) (files 
 	for _, sourceName := range sourceNames {
 		// Init FileAttributes struct.
 		var image FileInformation
-		image.BuildFileAttributes(sourceName)
+		image.BuildFileInformation(sourceName)
 
 		// Get image exif.
 		imageExif, err := metadata.GetExif(sourceName)

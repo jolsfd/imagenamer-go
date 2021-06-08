@@ -31,7 +31,7 @@ func TestBuildFileInformation(t *testing.T) {
 		CopyNumber:    2,
 	}
 	got := rename.FileInformation{}
-	got.BuildFileAttributes("../testdata/test_image.jpg")
+	got.BuildFileInformation("../testdata/test_image.jpg")
 
 	if want.Path != got.Path {
 		t.Errorf("Path = %s, want = %s", want.Path, got.Path)
