@@ -14,7 +14,7 @@ import (
 	"github.com/rwcarlsen/goexif/exif"
 )
 
-type FileAttributes struct {
+type FileInformation struct {
 	Path          string
 	SourceName    string
 	TargetName    string
@@ -25,7 +25,7 @@ type FileAttributes struct {
 }
 
 // BuildFileAttributes takes an source name as string. It assign values into the FileAttributes struct.
-func (f *FileAttributes) BuildFileAttributes(sourceName string) {
+func (f *FileInformation) BuildFileAttributes(sourceName string) {
 	// Get Values.
 	baseName := filepath.Base(sourceName)
 	extension := filepath.Ext(baseName)
@@ -40,7 +40,7 @@ func (f *FileAttributes) BuildFileAttributes(sourceName string) {
 }
 
 // GetNewFileName assign the new filename into a FileAttributes struct.
-func (f *FileAttributes) GetNewFileName(format string, imageExif *exif.Exif) error {
+func (f *FileInformation) GetNewFileName(format string, imageExif *exif.Exif) error {
 	dateTime, err := metadata.GetDateTime(imageExif)
 	if err != nil {
 		return err
@@ -57,7 +57,7 @@ func (f *FileAttributes) GetNewFileName(format string, imageExif *exif.Exif) err
 }
 
 // GetTargetName assign the target name into a FileAttributes struct.
-func (f *FileAttributes) GetTargetName() {
+func (f *FileInformation) GetTargetName() {
 	f.TargetName = filepath.Join(f.Path, f.NewFileName+f.FileExtension)
 
 	for CheckFileExists(f.Path, f.TargetName) {
@@ -131,7 +131,7 @@ func ListImagesInDir(rootPath string, extensions []string, excludedDirs []string
 func RenameImages(sourceNames []string, format string) error {
 	for _, sourceName := range sourceNames {
 		// Init FileAttributes struct.
-		var image FileAttributes
+		var image FileInformation
 		image.BuildFileAttributes(sourceName)
 
 		// Get image exif.
