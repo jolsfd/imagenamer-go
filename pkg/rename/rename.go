@@ -128,35 +128,15 @@ func ListImagesInDir(rootPath string, extensions []string, excludedDirs []string
 	return list, err
 }
 
-// RenameImages takes a sclice with source names and rename the files.
-func RenameImages(sourceNames []string, format string) error {
-	for _, sourceName := range sourceNames {
-		// Init FileAttributes struct.
-		var image FileInformation
-		image.BuildFileAttributes(sourceName)
-
-		// Get image exif.
-		imageExif, err := metadata.GetExif(sourceName)
-		if err != nil {
-			color.Red("%s %v\n", image.SourceName, err)
-			continue
-		}
-
-		// Build new filename and target name.
-		err = image.GetNewFileName(format, imageExif)
-		if err != nil {
-			color.Red("%s %v\n", image.SourceName, err)
-			continue
-		}
-		image.GetTargetName()
-
+// RenameImages renames images.
+func RenameImages(files []FileInformation) error {
+	for _, file := range files {
 		// Rename image.
-		err = os.Rename(image.SourceName, image.TargetName)
+		err := os.Rename(file.SourceName, file.TargetName)
 		if err != nil {
-			color.Red("%s %v\n", image.SourceName, err)
-			continue
+			log.Print(file.SourceName, color.RedString(err.Error()))
 		}
-		color.Green("%s -> %s\n", image.SourceName, image.TargetName)
 	}
+
 	return nil
 }
