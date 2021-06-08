@@ -3,15 +3,17 @@ package rename_test
 import (
 	"testing"
 
+	"github.com/jolsfd/imagenamer-go/pkg/metadata"
 	"github.com/jolsfd/imagenamer-go/pkg/rename"
 )
 
+const sourceName = "../testdata/test_image.jpg"
+
 func TestCheckFileExists(t *testing.T) {
 	path := "../testdata"
-	fileExist := "../testdata/test_image.jpg"
 	fileNotExist := "../testdata/NO_image.jpg"
 
-	if !rename.CheckFileExists(path, fileExist) {
+	if !rename.CheckFileExists(path, sourceName) {
 		t.Error("FileExist should exist")
 	}
 
@@ -23,7 +25,7 @@ func TestCheckFileExists(t *testing.T) {
 func TestBuildFileInformation(t *testing.T) {
 	want := rename.FileInformation{
 		Path:          "../testdata",
-		SourceName:    "../testdata/test_image.jpg",
+		SourceName:    sourceName,
 		TargetName:    "",
 		FileName:      "test_image",
 		NewFileName:   "",
@@ -31,7 +33,7 @@ func TestBuildFileInformation(t *testing.T) {
 		CopyNumber:    2,
 	}
 	got := rename.FileInformation{}
-	got.BuildFileInformation("../testdata/test_image.jpg")
+	got.BuildFileInformation(sourceName)
 
 	if want.Path != got.Path {
 		t.Errorf("Path = %s, want = %s", want.Path, got.Path)
@@ -59,5 +61,32 @@ func TestBuildFileInformation(t *testing.T) {
 
 	if want.CopyNumber != got.CopyNumber {
 		t.Errorf("CopyNumber = %d, want = %d", want.CopyNumber, got.CopyNumber)
+	}
+}
+
+func TestGetValues(t *testing.T) {
+	var image rename.FileInformation
+	format := "IMG_DATETIME_MODEL"
+	exif, err := metadata.GetExif(sourceName)
+	if err != nil {
+		t.Error(err)
+	}
+	image.BuildFileInformation(sourceName)
+
+	wantNewFilename := "IMG_20200409_220822_Pixel3a"
+	err = image.GetNewFileName(format, exif)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if wantNewFilename != image.NewFileName {
+		t.Errorf("NewFilename = %s, want = %s", image.NewFileName, wantNewFilename)
+	}
+
+	wantTargetName := "../testdata/IMG_20200409_220822_Pixel3a.jpg"
+	image.GetTargetName()
+
+	if wantTargetName != image.TargetName {
+		t.Errorf("NewTargetName = %s, want = %s", image.TargetName, wantTargetName)
 	}
 }
