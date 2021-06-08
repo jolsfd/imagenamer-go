@@ -83,10 +83,47 @@ func TestGetValues(t *testing.T) {
 		t.Errorf("NewFilename = %s, want = %s", image.NewFileName, wantNewFilename)
 	}
 
-	wantTargetName := "../testdata/IMG_20200409_220822_Pixel3a.jpg"
+	wantTargetName := "../testdata/IMG_20200409_220822_Pixel3a~2.jpg"
 	image.GetTargetName()
 
 	if wantTargetName != image.TargetName {
 		t.Errorf("NewTargetName = %s, want = %s", image.TargetName, wantTargetName)
 	}
+}
+
+func TestListImagesInDir(t *testing.T) {
+	rootPath := "../testdata"
+	exclude := []string{"exclude"}
+	extensions := []string{".jpg"}
+	safeRename := true
+	safePrefixes := []string{"test"}
+
+	// Test with SafeRename and exclude.
+	want := []string{"../testdata/IMG_20200409_220822_Pixel3a.jpg"}
+
+	files, err := rename.ListImagesInDir(rootPath, extensions, exclude, safeRename, safePrefixes)
+	if err != nil {
+		t.Error(err)
+	}
+	for i, file := range files {
+		if file != want[i] {
+			t.Errorf("got = %s, want = %s", file, want[i])
+		}
+	}
+
+	// Test without SafeRename and exclude.
+	safeRename = false
+	exclude = []string{}
+
+	want = []string{"../testdata/IMG_20200409_220822_Pixel3a.jpg", "../testdata/exclude/excludeImage.jpg", sourceName}
+	files, err = rename.ListImagesInDir(rootPath, extensions, exclude, safeRename, safePrefixes)
+	if err != nil {
+		t.Error(err)
+	}
+	for i, file := range files {
+		if file != want[i] {
+			t.Errorf("got = %s, want = %s", file, want[i])
+		}
+	}
+
 }
