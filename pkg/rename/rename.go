@@ -58,7 +58,7 @@ func (f *FileInformation) GetNewFileName(format string, imageExif *exif.Exif) er
 }
 
 // GetTargetName assign the target name into a FileAttributes struct.
-func (f *FileInformation) GetTargetName() {
+func (f *FileInformation) GetTargetName() error {
 	f.TargetName = filepath.Join(f.Path, f.NewFileName+f.FileExtension)
 
 	for CheckFileExists(f.Path, f.TargetName) {
@@ -66,6 +66,8 @@ func (f *FileInformation) GetTargetName() {
 		f.TargetName = filepath.Join(f.Path, newFileName+f.FileExtension)
 		f.CopyNumber++
 	}
+
+	return nil
 }
 
 // find checks if a value is in a sclice and return true or false.
@@ -126,6 +128,59 @@ func ListImagesInDir(rootPath string, extensions []string, excludedDirs []string
 		return nil
 	})
 	return list, err
+}
+
+// GetFileInformation returns file informations from source names.
+func GetFileInformation(sourceNames []string, format string, debug bool) (files []FileInformation, tableData [][]string, err error) {
+	for _, sourceName := range sourceNames {
+		// Init FileAttributes struct.
+		var image FileInformation
+		image.BuildFileAttributes(sourceName)
+
+		// Get image exif.
+		imageExif, err := metadata.GetExif(sourceName)
+		if err != nil {
+			image.Status = color.RedString("fail")
+			tableData = append(tableData, []string{image.FileName + image.FileExtension, image.NewFileName + image.FileExtension, image.Status})
+			if debug {
+				log.Print(color.RedString(err.Error()))
+			}
+			continue
+		}
+
+		// Build new filename.
+		err = image.GetNewFileName(format, imageExif)
+		if err != nil {
+			image.Status = color.RedString("fail")
+			tableData = append(tableData, []string{image.FileName + image.FileExtension, image.NewFileName + image.FileExtension, image.Status})
+			if debug {
+				log.Print(color.RedString(err.Error()))
+			}
+			continue
+		}
+
+		// Build new target name.
+		err = image.GetTargetName()
+		if err != nil {
+			image.Status = color.RedString("fail")
+			tableData = append(tableData, []string{image.FileName + image.FileExtension, image.NewFileName + image.FileExtension, image.Status})
+			if debug {
+				log.Print(color.RedString(err.Error()))
+			}
+			continue
+		}
+
+		// Set image status.
+		image.Status = color.GreenString("ok")
+
+		// Append information to table.
+		tableData = append(tableData, []string{image.FileName + image.FileExtension, image.NewFileName + image.FileExtension, image.Status})
+
+		// Append image to file sclice.
+		files = append(files, image)
+	}
+
+	return files, tableData, nil
 }
 
 // RenameImages renames images.
