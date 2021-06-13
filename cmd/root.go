@@ -28,6 +28,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/jolsfd/imagenamer-go/pkg/doc"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
@@ -59,18 +60,15 @@ func Execute() {
 	}
 }
 
+// init initializes configuration and flags.
 func init() {
+	// Init config
 	cobra.OnInitialize(initConfig)
 
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.imagenamer-go.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// Init flags
+	rootCmd.PersistentFlags().BoolVar(&debug, "debug", false, doc.DebugFlag)
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", doc.ConfigFileFlag)
+	rootCmd.Version = doc.Version
 }
 
 // initConfig reads in config file and ENV variables if set.
