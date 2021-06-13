@@ -26,10 +26,11 @@ import (
 	"log"
 	"os"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
+	"github.com/jolsfd/imagenamer-go/pkg/config"
 	"github.com/jolsfd/imagenamer-go/pkg/doc"
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
@@ -71,29 +72,37 @@ func init() {
 	rootCmd.Version = doc.Version
 }
 
-// initConfig reads in config file and ENV variables if set.
+// initConfig reads in config file.
 func initConfig() {
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		// Find home directory.
-		home, err := homedir.Dir()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
+	var err error
 
-		// Search config in home directory with name ".imagenamer-go" (without extension).
-		viper.AddConfigPath(home)
-		viper.SetConfigName(".imagenamer-go")
+	// Initalize config.
+	viper.SetConfigName(config.DefaultConfigName)
+	viper.SetConfigType(config.DefaultConfigType)
+
+	// Set defaults.
+	config.DefaultConfig()
+	configDir := config.GetConfigDir()
+	configFile := config.GetConfigFile()
+
+	// Use config file from the flag.
+	if cfgFile != "" {
+		viper.SetConfigFile(cfgFile)
+		err = viper.ReadInConfig()
+		checkError(err)
+	} else {
+		viper.AddConfigPath(configDir)
+
+		err = viper.ReadInConfig()
+		if config.CheckLoadError(err).Error() == config.DefaultNoConfigError {
+			err = config.WriteConfigFile(configDir, configFile)
+			checkError(err)
+		}
 	}
 
-	viper.AutomaticEnv() // read in environment variables that match
-
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	// Debug Message:
+	if debug {
+		color.Cyan("Configfile: %s\n", viper.ConfigFileUsed())
 	}
 }
 
