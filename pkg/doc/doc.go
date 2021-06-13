@@ -23,3 +23,6 @@ argument is given is the workdirectory.`
 	SafeRenameFlag = "disable safe rename function"
 	YesFlag        = "confirmed all questions with yes"
 )
+
+// Version
+const Version = "0.0.0"
