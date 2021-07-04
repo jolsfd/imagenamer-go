@@ -11,6 +11,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/jolsfd/imagenamer-go/pkg/metadata"
+	"github.com/jolsfd/imagenamer-go/pkg/validation"
 	"github.com/rwcarlsen/goexif/exif"
 )
 
@@ -161,6 +162,28 @@ func GetFileInformation(sourceNames []string, format string, debug bool) (files 
 
 		// Build new target name.
 		err = image.GetTargetName()
+		if err != nil {
+			image.Status = color.RedString(StatusFail)
+			tableData = append(tableData, []string{image.FileName + image.FileExtension, image.NewFileName + image.FileExtension, image.Status})
+			if debug {
+				log.Print(color.RedString(err.Error()))
+			}
+			continue
+		}
+
+		// Check forbidden characters.
+		err = validation.CheckForbiddenCharacters(image.NewFileName)
+		if err != nil {
+			image.Status = color.RedString(StatusFail)
+			tableData = append(tableData, []string{image.FileName + image.FileExtension, image.NewFileName + image.FileExtension, image.Status})
+			if debug {
+				log.Print(color.RedString(err.Error()))
+			}
+			continue
+		}
+
+		// Check length.
+		err = validation.CheckTargetLength(image.TargetName)
 		if err != nil {
 			image.Status = color.RedString(StatusFail)
 			tableData = append(tableData, []string{image.FileName + image.FileExtension, image.NewFileName + image.FileExtension, image.Status})
