@@ -14,7 +14,7 @@ func TestGetConfigDir(t *testing.T) {
 	homeDir, err := homedir.Dir()
 	checkError(err, t)
 
-	want := filepath.Join(homeDir, ".imagenamer-go")
+	want := filepath.Join(homeDir, config.DefaultFolderName)
 	got := config.GetConfigDir()
 
 	if want != got {
@@ -26,7 +26,7 @@ func TestGetConfigFile(t *testing.T) {
 	homeDir, err := homedir.Dir()
 	checkError(err, t)
 
-	want := filepath.Join(homeDir, ".imagenamer-go/config.yaml")
+	want := filepath.Join(homeDir, config.DefaultFolderName, config.DefaultConfigFileName)
 	got := config.GetConfigFile()
 
 	if want != got {
@@ -67,7 +67,7 @@ func TestDefaultConfig(t *testing.T) {
 
 func TestLoadConfig(t *testing.T) {
 	viper.Reset()
-	configDir := "../testdata/imagenamer-go"
+	configDir := filepath.Join("..", "testdata", "imagenamer-go")
 
 	viper.SetConfigName(config.DefaultConfigName)
 	viper.SetConfigType(config.DefaultConfigType)
@@ -80,7 +80,7 @@ func TestLoadConfig(t *testing.T) {
 
 func TestLoadNoConfig(t *testing.T) {
 	viper.Reset()
-	configDir := "../testdata/NotExist"
+	configDir := filepath.Join("..", "testdata", "NotExist")
 
 	viper.SetConfigName(config.DefaultConfigName)
 	viper.SetConfigType(config.DefaultConfigType)
@@ -97,8 +97,8 @@ func TestLoadNoConfig(t *testing.T) {
 func TestWriteConfigFile(t *testing.T) {
 	viper.Reset()
 	var err error
-	configDir := "../testdata/temp"
-	configFile := "../testdata/temp/config.yaml"
+	configDir := filepath.Join("..", "testdata", "temp")
+	configFile := filepath.Join("..", "testdata", "temp", "config.yaml")
 
 	viper.SetConfigName(config.DefaultConfigName)
 	viper.SetConfigType(config.DefaultConfigType)
