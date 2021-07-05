@@ -2,16 +2,17 @@ package rename_test
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/jolsfd/imagenamer-go/pkg/metadata"
 	"github.com/jolsfd/imagenamer-go/pkg/rename"
 )
 
-const sourceName = "../testdata/test_image.jpg"
+var sourceName = filepath.Join("..", "testdata", "test_image.jpg")
+var path = filepath.Join("..", "testdata")
 
 func TestCheckFileExists(t *testing.T) {
-	path := "../testdata"
 	fileNotExist := "../testdata/NO_image.jpg"
 
 	if !rename.CheckFileExists(path, sourceName) {
@@ -25,7 +26,7 @@ func TestCheckFileExists(t *testing.T) {
 
 func TestBuildFileInformation(t *testing.T) {
 	want := rename.FileInformation{
-		Path:          "../testdata",
+		Path:          path,
 		SourceName:    sourceName,
 		TargetName:    "",
 		FileName:      "test_image",
@@ -84,7 +85,7 @@ func TestGetValues(t *testing.T) {
 		t.Errorf("NewFilename = %s, want = %s", image.NewFileName, wantNewFilename)
 	}
 
-	wantTargetName := "../testdata/IMG_20200409_220822_Pixel3a~2.jpg"
+	wantTargetName := filepath.Join(path, "IMG_20200409_220822_Pixel3a~2.jpg")
 	image.GetTargetName()
 
 	if wantTargetName != image.TargetName {
@@ -93,16 +94,15 @@ func TestGetValues(t *testing.T) {
 }
 
 func TestListImagesInDir(t *testing.T) {
-	rootPath := "../testdata"
 	exclude := []string{"exclude"}
 	extensions := []string{".jpg"}
 	safeRename := true
 	safePrefixes := []string{"test"}
 
 	// Test with SafeRename and exclude.
-	want := []string{"../testdata/IMG_20200409_220822_Pixel3a.jpg"}
+	want := []string{filepath.Join(path, "IMG_20200409_220822_Pixel3a.jpg")}
 
-	files, err := rename.ListImagesInDir(rootPath, extensions, exclude, safeRename, safePrefixes)
+	files, err := rename.ListImagesInDir(path, extensions, exclude, safeRename, safePrefixes)
 	if err != nil {
 		t.Error(err)
 	}
@@ -115,9 +115,8 @@ func TestListImagesInDir(t *testing.T) {
 	// Test without SafeRename and exclude.
 	safeRename = false
 	exclude = []string{}
-
-	want = []string{"../testdata/IMG_20200409_220822_Pixel3a.jpg", "../testdata/exclude/excludeImage.jpg", sourceName}
-	files, err = rename.ListImagesInDir(rootPath, extensions, exclude, safeRename, safePrefixes)
+	want = []string{filepath.Join(path, "IMG_20200409_220822_Pixel3a.jpg"), filepath.Join(path, "exclude", "excludeImage.jpg"), sourceName}
+	files, err = rename.ListImagesInDir(path, extensions, exclude, safeRename, safePrefixes)
 	if err != nil {
 		t.Error(err)
 	}
@@ -132,7 +131,10 @@ func TestListImagesInDir(t *testing.T) {
 func TestGetFileInformation(t *testing.T) {
 	debug := true
 	format := "IMG_DATETIME_MODEL"
-	sourceNames := []string{"../testdata/IMG_20200409_220822_Pixel3a.jpg", "../testdata/excludeImages/excludeImage.jpg", "../testdata/test_image.jpg"}
+	sourceNames := []string{
+		filepath.Join(path, "IMG_20200409_220822_Pixel3a.jpg"),
+		filepath.Join(path, "excludeImages", "excludeImage.jpg"),
+		filepath.Join(path, "test_image.jpg")}
 
 	wantTableData := [][]string{
 		{"IMG_20200409_220822_Pixel3a.jpg", "IMG_20200409_220822_Pixel3a.jpg", "ok"},
@@ -155,10 +157,11 @@ func TestGetFileInformation(t *testing.T) {
 }
 
 func TestRenameImages(t *testing.T) {
+	targetName := filepath.Join(path, "IMG_20200409_220822_Pixel3a~2.jpg")
 	err := rename.RenameImages([]rename.FileInformation{{
-		Path:          "../testdata",
+		Path:          path,
 		SourceName:    sourceName,
-		TargetName:    "../testdata/IMG_20200409_220822_Pixel3a~2.jpg",
+		TargetName:    targetName,
 		FileName:      "test_image",
 		NewFileName:   "IMG_20200409_220822_Pixel3a",
 		FileExtension: ".jpg",
@@ -170,5 +173,5 @@ func TestRenameImages(t *testing.T) {
 	}
 
 	// Clean up.
-	os.Rename("../testdata/IMG_20200409_220822_Pixel3a~2.jpg", sourceName)
+	os.Rename(targetName, sourceName)
 }
