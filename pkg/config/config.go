@@ -36,9 +36,13 @@ func WriteConfigFile(configDir string, configFile string) (err error) {
 	// Check file.
 	_, err = os.Stat(configFile)
 	if os.IsNotExist(err) {
-		if _, err := os.Create(configFile); err != nil {
+		file, err := os.Create(configFile)
+		if err != nil {
 			return err
 		}
+
+		// Close file.
+		defer file.Close()
 	}
 
 	// Write config.
