@@ -2,6 +2,7 @@ package config
 
 // Default config file.
 const (
+	DefaultFolderName     = ".imagenamer-go"
 	DefaultConfigFileName = "/config.yaml"
 	DefaultConfigName     = "config"
 	DefaultConfigType     = "yaml"

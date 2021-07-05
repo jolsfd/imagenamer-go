@@ -11,11 +11,11 @@ import (
 
 // GetConfigDir returns a string with the path to the config folder.
 func GetConfigDir() string {
-	configPath, err := os.UserConfigDir()
+	configPath, err := os.UserHomeDir()
 	if err != nil {
 		return err.Error()
 	}
-	return filepath.Join(configPath, "imagenamer-go")
+	return filepath.Join(configPath, DefaultFolderName)
 }
 
 // GetConfigFile returns a string with the absolute path to the settings.

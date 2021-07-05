@@ -14,7 +14,7 @@ func TestGetConfigDir(t *testing.T) {
 	homeDir, err := homedir.Dir()
 	checkError(err, t)
 
-	want := filepath.Join(homeDir, ".config/imagenamer-go")
+	want := filepath.Join(homeDir, ".imagenamer-go")
 	got := config.GetConfigDir()
 
 	if want != got {
@@ -26,7 +26,7 @@ func TestGetConfigFile(t *testing.T) {
 	homeDir, err := homedir.Dir()
 	checkError(err, t)
 
-	want := filepath.Join(homeDir, ".config/imagenamer-go/config.yaml")
+	want := filepath.Join(homeDir, ".imagenamer-go/config.yaml")
 	got := config.GetConfigFile()
 
 	if want != got {
