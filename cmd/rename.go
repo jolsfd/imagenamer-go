@@ -26,6 +26,7 @@ import (
 	"os"
 
 	"github.com/fatih/color"
+	"github.com/jolsfd/imagenamer-go/pkg/config"
 	"github.com/jolsfd/imagenamer-go/pkg/doc"
 	"github.com/jolsfd/imagenamer-go/pkg/question"
 	"github.com/jolsfd/imagenamer-go/pkg/rename"
@@ -61,13 +62,13 @@ func renameCommand(cmd *cobra.Command, paths []string) {
 	workdir, err := os.Getwd()
 	checkError(err)
 
-	format := viper.GetString("format")
-	extensions := viper.GetStringSlice("extensions")
-	safePrefixes := viper.GetStringSlice("safePrefixes")
+	templateString := viper.GetString(config.Template)
+	extensions := viper.GetStringSlice(config.Extensions)
+	safePrefixes := viper.GetStringSlice(config.SafeStrings)
 
 	// Debug:
 	if debug {
-		color.Cyan("Excludes: %v\nSafeRename: %v\nFormat: %v\nExtensions: %v\nSafePrefixes: %s\n", excludes, safeRename, format, extensions, safePrefixes)
+		color.Cyan("Excludes: %v\nSafeRename: %v\nTemplate: %v\nExtensions: %v\nSafePrefixes: %s\n", excludes, safeRename, templateString, extensions, safePrefixes)
 	}
 
 	if len(paths) == 0 {
@@ -85,7 +86,7 @@ func renameCommand(cmd *cobra.Command, paths []string) {
 		checkError(err)
 
 		// Get files informations from source names.
-		files, tableData, err := rename.GetFileInformation(sourceNames, format, debug)
+		files, tableData, err := rename.GetFileInformation(sourceNames, templateString, debug)
 		checkError(err)
 
 		// Append to sclice.

@@ -39,17 +39,17 @@ func TestDefaultConfig(t *testing.T) {
 	config.DefaultConfig()
 
 	// want
-	wantFormat := "IMG_DATETIME_MODEL"
+	wantTemplateString := "IMG_{{.DateTime}}_{{.CameraModel}}"
 	wantExtensions := []string{".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".dng"}
 	wantSafePrefixes := []string{"IMG"}
 
 	// got
-	format := viper.GetString("Format")
-	extensions := viper.GetStringSlice("Extensions")
-	safePrefixes := viper.GetStringSlice("SafePrefixes")
+	templateString := viper.GetString(config.Template)
+	extensions := viper.GetStringSlice(config.Extensions)
+	safePrefixes := viper.GetStringSlice(config.SafeStrings)
 
-	if wantFormat != format {
-		t.Errorf("Format = %s; want = %s;", format, wantFormat)
+	if wantTemplateString != templateString {
+		t.Errorf("Template = %s; want = %s;", templateString, wantTemplateString)
 	}
 
 	for index, extension := range extensions {

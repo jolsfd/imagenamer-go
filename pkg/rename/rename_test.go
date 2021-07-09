@@ -68,7 +68,7 @@ func TestBuildFileInformation(t *testing.T) {
 
 func TestGetValues(t *testing.T) {
 	var image rename.FileInformation
-	format := "IMG_DATETIME_MODEL"
+	templateString := "IMG_{{.DateTime}}_{{.CameraModel}}"
 	exif, err := metadata.GetExif(sourceName)
 	if err != nil {
 		t.Error(err)
@@ -76,7 +76,7 @@ func TestGetValues(t *testing.T) {
 	image.BuildFileInformation(sourceName)
 
 	wantNewFilename := "IMG_20200409_220822_Pixel3a"
-	err = image.GetNewFileName(format, exif)
+	err = image.GetNewFileName(templateString, exif)
 	if err != nil {
 		t.Error(err)
 	}
@@ -130,19 +130,18 @@ func TestListImagesInDir(t *testing.T) {
 
 func TestGetFileInformation(t *testing.T) {
 	debug := true
-	format := "IMG_DATETIME_MODEL"
+	templateString := "IMG_{{.DateTime}}_{{.CameraModel}}"
 	sourceNames := []string{
 		filepath.Join(path, "IMG_20200409_220822_Pixel3a.jpg"),
-		filepath.Join(path, "excludeImages", "excludeImage.jpg"),
+		filepath.Join(path, "exclude", "excludeImage.jpg"),
 		filepath.Join(path, "test_image.jpg")}
 
 	wantTableData := [][]string{
 		{"IMG_20200409_220822_Pixel3a.jpg", "IMG_20200409_220822_Pixel3a.jpg", "ok"},
 		{"excludeImage.jpg", ".jpg", "fail"},
-		{"test_image.jpg", "IMG_20200409_220822_Pixel3a.jpg", "ok"},
+		{"test_image.jpg", "IMG_20200409_220822_Pixel3a~2.jpg", "ok"},
 	}
-
-	_, tableData, err := rename.GetFileInformation(sourceNames, format, debug)
+	_, tableData, err := rename.GetFileInformation(sourceNames, templateString, debug)
 	if err != nil {
 		t.Error(err)
 	}
@@ -150,7 +149,7 @@ func TestGetFileInformation(t *testing.T) {
 	for i := range tableData {
 		for j := range tableData[i] {
 			if tableData[i][j] != wantTableData[i][j] {
-				t.Errorf("want = %s, got = %s", tableData[i][j], wantTableData[i][j])
+				t.Errorf("got = %s, want = %s", tableData[i][j], wantTableData[i][j])
 			}
 		}
 	}

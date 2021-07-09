@@ -2,12 +2,15 @@
 package rename
 
 import (
+	"bytes"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
+	"text/template"
 
 	"github.com/fatih/color"
 	"github.com/jolsfd/imagenamer-go/pkg/metadata"
@@ -26,6 +29,11 @@ type FileInformation struct {
 	Status        string
 }
 
+type FileNameTemplate struct {
+	CameraModel string
+	DateTime    string
+}
+
 // BuildFileAttributes takes an source name as string. It assign values into the FileAttributes struct.
 func (f *FileInformation) BuildFileInformation(sourceName string) {
 	// Get Values.
@@ -42,19 +50,36 @@ func (f *FileInformation) BuildFileInformation(sourceName string) {
 }
 
 // GetNewFileName assign the new filename into a FileAttributes struct.
-func (f *FileInformation) GetNewFileName(format string, imageExif *exif.Exif) error {
+func (f *FileInformation) GetNewFileName(templateString string, imageExif *exif.Exif) error {
+	var output bytes.Buffer
+
+	// Get exif values.
 	dateTime, err := metadata.GetDateTime(imageExif)
 	if err != nil {
 		return err
 	}
+
 	cameraModel, err := metadata.GetCameraModel(imageExif)
 	if err != nil {
 		return err
 	}
-	format = strings.ReplaceAll(format, "DATETIME", dateTime)
-	format = strings.ReplaceAll(format, "MODEL", cameraModel)
 
-	f.NewFileName = format
+	// Create template.
+	templ, err := template.New("").Parse(templateString)
+	if err != nil {
+		return err
+	}
+
+	// Execute template.
+	err = templ.Execute(&output, FileNameTemplate{cameraModel, dateTime})
+	if err != nil {
+		return err
+	}
+
+	// Assign value.
+	f.NewFileName = output.String()
+
+	// Return error
 	return nil
 }
 
@@ -62,6 +87,12 @@ func (f *FileInformation) GetNewFileName(format string, imageExif *exif.Exif) er
 func (f *FileInformation) GetTargetName() error {
 	f.TargetName = filepath.Join(f.Path, f.NewFileName+f.FileExtension)
 
+	// Check if source name equals target name.
+	if f.SourceName == f.TargetName {
+		return nil
+	}
+
+	// Check if file exists.
 	for CheckFileExists(f.Path, f.TargetName) {
 		newFileName := f.NewFileName + "~" + strconv.Itoa(f.CopyNumber)
 		f.TargetName = filepath.Join(f.Path, newFileName+f.FileExtension)
@@ -82,15 +113,16 @@ func find(slice []string, val string) bool {
 }
 
 // checkSafePrefix checks if a file name contains a safe prefix.
-func checkSafePrefix(baseName string, list []string) bool {
-	for _, safePrefix := range list {
-		// Check length
-		if len(baseName) < len(safePrefix) {
+func checkSafeStrings(baseName string, safeStrings []string) bool {
+	for _, safeString := range safeStrings {
+		match, _ := regexp.MatchString(safeString, baseName)
+		if match {
+			return match
+		} else {
 			continue
-		} else if baseName[:len(safePrefix)] == safePrefix {
-			return true
 		}
 	}
+
 	return false
 }
 
@@ -117,7 +149,7 @@ func ListImagesInDir(rootPath string, extensions []string, excludedDirs []string
 
 		if !info.IsDir() {
 			if safeRename {
-				if !checkSafePrefix(filepath.Base(path), safePrefixes) && find(extensions, filepath.Ext(path)) {
+				if !checkSafeStrings(filepath.Base(path), safePrefixes) && find(extensions, filepath.Ext(path)) {
 					list = append(list, path)
 				}
 			} else {
@@ -132,7 +164,7 @@ func ListImagesInDir(rootPath string, extensions []string, excludedDirs []string
 }
 
 // GetFileInformation returns file informations from source names.
-func GetFileInformation(sourceNames []string, format string, debug bool) (files []FileInformation, tableData [][]string, err error) {
+func GetFileInformation(sourceNames []string, templateString string, debug bool) (files []FileInformation, tableData [][]string, err error) {
 	for _, sourceName := range sourceNames {
 		// Init FileAttributes struct.
 		var image FileInformation
@@ -150,7 +182,7 @@ func GetFileInformation(sourceNames []string, format string, debug bool) (files 
 		}
 
 		// Build new filename.
-		err = image.GetNewFileName(format, imageExif)
+		err = image.GetNewFileName(templateString, imageExif)
 		if err != nil {
 			image.Status = color.RedString(StatusFail)
 			tableData = append(tableData, []string{image.FileName + image.FileExtension, image.NewFileName + image.FileExtension, image.Status})
@@ -197,7 +229,7 @@ func GetFileInformation(sourceNames []string, format string, debug bool) (files 
 		image.Status = color.GreenString(StatusOk)
 
 		// Append information to table.
-		tableData = append(tableData, []string{image.FileName + image.FileExtension, image.NewFileName + image.FileExtension, image.Status})
+		tableData = append(tableData, []string{filepath.Base(image.SourceName), filepath.Base(image.TargetName), image.Status})
 
 		// Append image to file sclice.
 		files = append(files, image)
@@ -209,6 +241,11 @@ func GetFileInformation(sourceNames []string, format string, debug bool) (files 
 // RenameImages renames images.
 func RenameImages(files []FileInformation) error {
 	for _, file := range files {
+		// Check if file exists.
+		if CheckFileExists(file.Path, file.TargetName) {
+			log.Print(file.SourceName, color.RedString(FileExistsError))
+		}
+
 		// Rename image.
 		err := os.Rename(file.SourceName, file.TargetName)
 		if err != nil {

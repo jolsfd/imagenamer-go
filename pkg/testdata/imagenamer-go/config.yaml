@@ -5,7 +5,6 @@ extensions:
 - .JPEG
 - .png
 - .dng
-- .cr2
-format: IMG_DATETIME_MODEL
-safeprefixes:
+safe_strings:
 - IMG
+template: IMG_{{.DateTime}}_{{.CameraModel}}

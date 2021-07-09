@@ -52,9 +52,9 @@ func WriteConfigFile(configDir string, configFile string) (err error) {
 
 // DefaultConfig set default values to config.
 func DefaultConfig() {
-	viper.SetDefault("Format", DefaultFormat)
-	viper.SetDefault("Extensions", DefaultExtensions)
-	viper.SetDefault("SafePrefixes", DefaultSafePrefixes)
+	viper.SetDefault(Template, DefaultTemplateString)
+	viper.SetDefault(Extensions, DefaultExtensions)
+	viper.SetDefault(SafeStrings, DefaultSafePrefixes)
 }
 
 // CheckLoadError check if a error is containing a path error or a ConfigFileNotFoundError. It returns an error.
