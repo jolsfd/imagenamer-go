@@ -8,8 +8,8 @@ const (
 You can use the rename command to rename the images. To change settings change the config file.
 For more help please visit: https://github.com/jolsfd/imagenamer-go
 `
-	ConfigFileFlag = "config file (default is $HOME/.config/imagenamer/config.yaml)"
-	DebugFlag      = "show debug messages"
+	ConfigFileFlag = "Location of the configuration file (default: $HOME/.imagenamer/config.yaml)"
+	DebugFlag      = "Show debug messages"
 )
 
 // Rename Command
@@ -19,9 +19,9 @@ const (
 In this folders ImageNamer renames all Images after your config.
 To exclude folders use the --exclude flag.Default path when no 
 argument is given is the workdirectory.`
-	ExcludeFlag    = "exclude folders in your given path"
-	SafeRenameFlag = "disable safe rename function"
-	YesFlag        = "confirmed all questions with yes"
+	ExcludeFlag    = "Exclude folders in given paths"
+	SafeRenameFlag = "Disable or enable safe rename function (default: true)"
+	YesFlag        = "Confirm all question with yes (default: false)"
 )
 
 // Version

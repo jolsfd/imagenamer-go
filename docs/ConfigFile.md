@@ -1,1 +1,0 @@
-# ImageNamer-Go - Config File
