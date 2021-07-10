@@ -6,12 +6,11 @@ import (
 	"testing"
 
 	"github.com/jolsfd/imagenamer-go/pkg/config"
-	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
 func TestGetConfigDir(t *testing.T) {
-	homeDir, err := homedir.Dir()
+	homeDir, err := os.UserHomeDir()
 	checkError(err, t)
 
 	want := filepath.Join(homeDir, config.DefaultFolderName)
@@ -23,7 +22,7 @@ func TestGetConfigDir(t *testing.T) {
 }
 
 func TestGetConfigFile(t *testing.T) {
-	homeDir, err := homedir.Dir()
+	homeDir, err := os.UserHomeDir()
 	checkError(err, t)
 
 	want := filepath.Join(homeDir, config.DefaultFolderName, config.DefaultConfigFileName)

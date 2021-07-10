@@ -12,7 +12,6 @@ ImageNamer-Go relies on other open source software listed below:
 * olekukonko/tablewriter
 * rwcarlsen/goexif
 * fatih/color
-* mitchellh/go-homedir
 * spf13/cobra
 * spf13/viper
 * ayoisaiah/f2
