@@ -84,7 +84,7 @@ func (f *FileInformation) GetNewFileName(templateString string, imageExif *exif.
 }
 
 // GetTargetName assign the target name into a FileAttributes struct.
-func (f *FileInformation) GetTargetName() error {
+func (f *FileInformation) GetTargetName(targetNames []string) error {
 	f.TargetName = filepath.Join(f.Path, f.NewFileName+f.FileExtension)
 
 	// Check if source name equals target name.
@@ -92,8 +92,8 @@ func (f *FileInformation) GetTargetName() error {
 		return nil
 	}
 
-	// Check if file exists.
-	for CheckFileExists(f.Path, f.TargetName) {
+	// Check if file exists in dir or in list.
+	for CheckFileExists(f.Path, f.TargetName) || find(targetNames, f.TargetName) {
 		newFileName := f.NewFileName + "~" + strconv.Itoa(f.CopyNumber)
 		f.TargetName = filepath.Join(f.Path, newFileName+f.FileExtension)
 		f.CopyNumber++
@@ -141,7 +141,7 @@ func CheckFileExists(path string, sourceName string) bool {
 }
 
 // ListImagesInDir search through a directory for files with extensions that match. If a directory is excluded it will skip this directory.
-func ListImagesInDir(rootPath string, extensions []string, excludedDirs []string, safeRename bool, safePrefixes []string) (list []string, err error) {
+func ListImagesInDir(rootPath string, extensions []string, excludedDirs []string, safeRename bool, safeStrings []string) (list []string, err error) {
 	err = filepath.Walk(rootPath, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() && find(excludedDirs, filepath.Base(path)) {
 			return filepath.SkipDir
@@ -149,7 +149,7 @@ func ListImagesInDir(rootPath string, extensions []string, excludedDirs []string
 
 		if !info.IsDir() {
 			if safeRename {
-				if !checkSafeStrings(filepath.Base(path), safePrefixes) && find(extensions, filepath.Ext(path)) {
+				if !checkSafeStrings(filepath.Base(path), safeStrings) && find(extensions, filepath.Ext(path)) {
 					list = append(list, path)
 				}
 			} else {
@@ -165,6 +165,8 @@ func ListImagesInDir(rootPath string, extensions []string, excludedDirs []string
 
 // GetFileInformation returns file informations from source names.
 func GetFileInformation(sourceNames []string, templateString string, debug bool) (files []FileInformation, tableData [][]string, err error) {
+	var targetNames []string
+
 	for _, sourceName := range sourceNames {
 		// Init FileAttributes struct.
 		var image FileInformation
@@ -193,7 +195,7 @@ func GetFileInformation(sourceNames []string, templateString string, debug bool)
 		}
 
 		// Build new target name.
-		err = image.GetTargetName()
+		err = image.GetTargetName(targetNames)
 		if err != nil {
 			image.Status = color.RedString(StatusFail)
 			tableData = append(tableData, []string{image.FileName + image.FileExtension, image.NewFileName + image.FileExtension, image.Status})
@@ -233,6 +235,9 @@ func GetFileInformation(sourceNames []string, templateString string, debug bool)
 
 		// Append image to file sclice.
 		files = append(files, image)
+
+		// Append target name.
+		targetNames = append(targetNames, image.TargetName)
 	}
 
 	return files, tableData, nil

@@ -69,6 +69,8 @@ func TestBuildFileInformation(t *testing.T) {
 func TestGetValues(t *testing.T) {
 	var image rename.FileInformation
 	templateString := "IMG_{{.DateTime}}_{{.CameraModel}}"
+	targetNames := []string{}
+
 	exif, err := metadata.GetExif(sourceName)
 	if err != nil {
 		t.Error(err)
@@ -86,7 +88,7 @@ func TestGetValues(t *testing.T) {
 	}
 
 	wantTargetName := filepath.Join(path, "IMG_20200409_220822_Pixel3a~2.jpg")
-	image.GetTargetName()
+	image.GetTargetName(targetNames)
 
 	if wantTargetName != image.TargetName {
 		t.Errorf("NewTargetName = %s, want = %s", image.TargetName, wantTargetName)
@@ -97,12 +99,12 @@ func TestListImagesInDir(t *testing.T) {
 	exclude := []string{"exclude"}
 	extensions := []string{".jpg"}
 	safeRename := true
-	safePrefixes := []string{"test"}
+	safeStrings := []string{"test"}
 
 	// Test with SafeRename and exclude.
 	want := []string{filepath.Join(path, "IMG_20200409_220822_Pixel3a.jpg")}
 
-	files, err := rename.ListImagesInDir(path, extensions, exclude, safeRename, safePrefixes)
+	files, err := rename.ListImagesInDir(path, extensions, exclude, safeRename, safeStrings)
 	if err != nil {
 		t.Error(err)
 	}
@@ -115,8 +117,8 @@ func TestListImagesInDir(t *testing.T) {
 	// Test without SafeRename and exclude.
 	safeRename = false
 	exclude = []string{}
-	want = []string{filepath.Join(path, "IMG_20200409_220822_Pixel3a.jpg"), filepath.Join(path, "exclude", "excludeImage.jpg"), sourceName}
-	files, err = rename.ListImagesInDir(path, extensions, exclude, safeRename, safePrefixes)
+	want = []string{filepath.Join(path, "IMG_20200409_220822_Pixel3a.jpg"), filepath.Join(path, "exclude", "excludeImage.jpg"), sourceName, filepath.Join(path, "test_image_1.jpg")}
+	files, err = rename.ListImagesInDir(path, extensions, exclude, safeRename, safeStrings)
 	if err != nil {
 		t.Error(err)
 	}
