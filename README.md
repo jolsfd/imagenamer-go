@@ -17,23 +17,23 @@ ImageNamer-Go is written in Go, so you can install it through `go install`:
 go install github.com/jolsfd/imagenamer-go
 ```
 
-Pre-compiled binaries for Linux and Windows on the [releases page](https://github.com/jolsfd/imagenamer-go/releases/latest). Download the file archive for your operating system and architecture:
+Pre-compiled binaries for Linux and Windows on the [releases page](https://github.com/jolsfd/imagenamer-go/releases/latest). After you download the file archive for your operating system and architecture extract the file archive:
 
 **For Linux:**
 
 ```bash
 # make binary executable
-$ chmod +x f2
+$ chmod +x imagenamer-go
 
 # move binary to path
-$ sudo mv f2 /usr/local/bin
+$ sudo mv imagenamer-go /usr/local/bin
 ```
 
 **For Windows:**
 
 ```powershell
-# move binary a directory in your path
-$ move f2.exe C:\Users\<user>\.bin
+# move binary to a directory
+$ move imagenamer-go.exe C:\Users\<user>\.imagenamer-go
 ```
 
 ## Disclaimer
@@ -43,7 +43,7 @@ Make sure you use ImagerNamer-Go CLI with caution and at your own risk. **We do 
 
 ## Documentation
 
-Visit the documentation site [here](https://github.com/jolsfd/imagenamer-go/blob/main/docs/README.md). Please note that the documentation is still in progress.
+Visit the documentation site [here](https://github.com/jolsfd/imagenamer-go/blob/main/docs/README.md). Please note that the documentation is still a work in progress.
 
 ## Credits
 
