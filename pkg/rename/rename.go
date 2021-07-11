@@ -85,18 +85,19 @@ func (f *FileInformation) GetNewFileName(templateString string, imageExif *exif.
 
 // GetTargetName assign the target name into a FileAttributes struct.
 func (f *FileInformation) GetTargetName(targetNames []string) error {
+	// Build target name.
 	f.TargetName = filepath.Join(f.Path, f.NewFileName+f.FileExtension)
-
-	// Check if source name equals target name.
-	if f.SourceName == f.TargetName {
-		return nil
-	}
 
 	// Check if file exists in dir or in list.
 	for CheckFileExists(f.Path, f.TargetName) || find(targetNames, f.TargetName) {
-		newFileName := f.NewFileName + "~" + strconv.Itoa(f.CopyNumber)
-		f.TargetName = filepath.Join(f.Path, newFileName+f.FileExtension)
-		f.CopyNumber++
+		// Check if source name equals target name.
+		if f.SourceName == f.TargetName {
+			break
+		} else {
+			newFileName := f.NewFileName + "~" + strconv.Itoa(f.CopyNumber)
+			f.TargetName = filepath.Join(f.Path, newFileName+f.FileExtension)
+			f.CopyNumber++
+		}
 	}
 
 	return nil
@@ -246,15 +247,10 @@ func GetFileInformation(sourceNames []string, templateString string, debug bool)
 // RenameImages renames images.
 func RenameImages(files []FileInformation) error {
 	for _, file := range files {
-		// Check if file exists.
-		if CheckFileExists(file.Path, file.TargetName) {
-			log.Print(file.SourceName, color.RedString(FileExistsError))
-		}
-
 		// Rename image.
 		err := os.Rename(file.SourceName, file.TargetName)
 		if err != nil {
-			log.Print(file.SourceName, color.RedString(err.Error()))
+			log.Printf("%s %v", file.SourceName, color.RedString(err.Error()))
 		}
 	}
 
