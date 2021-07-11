@@ -18,7 +18,7 @@ Provide the paths as an argument.
 ```
   -e, --exclude strings   Exclude folders in given paths
   -h, --help              help for rename
-  -s, --safe              Disable or enable safe rename function (default: true) (default true)
+  -s, --safe              Disable or enable safe rename function (default: true)
   -y, --yes               Confirm all question with yes (default: false)
 ```
 
