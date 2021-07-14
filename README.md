@@ -3,8 +3,8 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/jolsfd/imagenamer-go)](https://goreportcard.com/report/github.com/jolsfd/imagenamer-go)
 [![Go Version](https://img.shields.io/github/go-mod/go-version/jolsfd/imagenamer-go.svg)](https://github.com/jolsfd/imagenamer-go)
 [![License](https://img.shields.io/github/license/jolsfd/imagenamer-go.svg)](https://github.com/jolsfd/imagenamer-go/blob/main/LICENSE)
-[![Issues](https://img.shields.io/github/issues/jolsfd/imagenamer-go.svg)](https://GitHub.com/jolsfd/imagenamer-go/issues/)
-[![Pull-requests](https://img.shields.io/github/issues-pr/jolsfd/imagenamer-go.svg)](https://GitHub.com/jolsfd/imagenamer-go/pull/)
+[![Issues](https://img.shields.io/github/issues/jolsfd/imagenamer-go.svg)](https://github.com/jolsfd/imagenamer-go/issues/)
+[![Pull-requests](https://img.shields.io/github/issues-pr/jolsfd/imagenamer-go.svg)](https://github.com/jolsfd/imagenamer-go/pulls)
 [![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/jolsfd/imagenamer-go)
 
 # ImageNamer-Go
