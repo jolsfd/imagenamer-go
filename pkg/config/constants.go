@@ -6,7 +6,6 @@ const (
 	DefaultConfigFileName = "config.yaml"
 	DefaultConfigName     = "config"
 	DefaultConfigType     = "yaml"
-	DefaultNoConfigError  = "no config file"
 
 	Template    = "template"
 	Extensions  = "extensions"

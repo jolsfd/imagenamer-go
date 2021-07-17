@@ -85,7 +85,7 @@ func initConfig() {
 		viper.AddConfigPath(configDir)
 
 		err = viper.ReadInConfig()
-		if config.CheckLoadError(err).Error() == config.DefaultNoConfigError {
+		if err != nil {
 			err = config.WriteConfigFile(configDir, configFile)
 			checkError(err)
 		}

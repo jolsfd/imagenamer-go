@@ -73,7 +73,6 @@ func TestLoadConfig(t *testing.T) {
 	viper.AddConfigPath(configDir)
 
 	err := viper.ReadInConfig()
-	err = config.CheckLoadError(err)
 	checkError(err, t)
 }
 
@@ -86,10 +85,9 @@ func TestLoadNoConfig(t *testing.T) {
 	viper.AddConfigPath(configDir)
 
 	err := viper.ReadInConfig()
-	err = config.CheckLoadError(err)
 
-	if err.Error() != config.DefaultNoConfigError {
-		t.Errorf("want = %s; got = %v", config.DefaultNoConfigError, err)
+	if err == nil {
+		t.Errorf("%v", err)
 	}
 }
 
