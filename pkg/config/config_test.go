@@ -111,11 +111,11 @@ func TestWriteConfigFile(t *testing.T) {
 	err = config.WriteConfigFile(configDir, configFile)
 	checkError(err, t)
 
-	// err = os.Remove(configFile)
-	// checkError(err, t)
+	err = os.Remove(configFile)
+	checkError(err, t)
 
-	// err = os.Remove(configDir)
-	// checkError(err, t)
+	err = os.Remove(configDir)
+	checkError(err, t)
 }
 
 func checkError(err error, t *testing.T) {
