@@ -67,6 +67,8 @@ func renameCommand(cmd *cobra.Command, paths []string) {
 	safePrefixes := viper.GetStringSlice(config.SafeStrings)
 	separator := viper.GetString(config.Separator)
 
+	fmt.Printf("%s\n", doc.WaitMessage)
+
 	// Debug:
 	if debug {
 		color.Cyan("Excludes: %v\nSafeRename: %v\nTemplate: %v\nExtensions: %v\nSafePrefixes: %s\n", excludes, safeRename, templateString, extensions, safePrefixes)

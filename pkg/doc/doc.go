@@ -26,3 +26,5 @@ argument is given is the workdirectory.`
 
 // Version
 const Version = "0.0.0"
+
+const WaitMessage = "Please wait..."
