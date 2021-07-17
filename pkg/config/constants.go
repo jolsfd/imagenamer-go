@@ -6,10 +6,12 @@ const (
 	DefaultConfigFileName = "config.yaml"
 	DefaultConfigName     = "config"
 	DefaultConfigType     = "yaml"
+	DefaultSeparator      = "~"
 
 	Template    = "template"
 	Extensions  = "extensions"
 	SafeStrings = "safe_strings"
+	Separator   = "copy_separator"
 )
 
 // Default Values.

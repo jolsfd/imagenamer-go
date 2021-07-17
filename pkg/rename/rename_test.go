@@ -68,6 +68,7 @@ func TestBuildFileInformation(t *testing.T) {
 
 func TestGetValues(t *testing.T) {
 	var image rename.FileInformation
+	separator := "~"
 	templateString := "IMG_{{.DateTime}}_{{.CameraModel}}"
 	targetNames := []string{}
 
@@ -88,7 +89,7 @@ func TestGetValues(t *testing.T) {
 	}
 
 	wantTargetName := filepath.Join(path, "IMG_20200409_220822_Pixel3a~2.jpg")
-	image.GetTargetName(targetNames)
+	image.GetTargetName(targetNames, separator)
 
 	if wantTargetName != image.TargetName {
 		t.Errorf("NewTargetName = %s, want = %s", image.TargetName, wantTargetName)
@@ -132,6 +133,7 @@ func TestListImagesInDir(t *testing.T) {
 
 func TestGetFileInformation(t *testing.T) {
 	debug := true
+	separator := "~"
 	templateString := "IMG_{{.DateTime}}_{{.CameraModel}}"
 	sourceNames := []string{
 		filepath.Join(path, "IMG_20200409_220822_Pixel3a.jpg"),
@@ -143,7 +145,7 @@ func TestGetFileInformation(t *testing.T) {
 		{"excludeImage.jpg", ".jpg", "fail"},
 		{"test_image.jpg", "IMG_20200409_220822_Pixel3a~2.jpg", "ok"},
 	}
-	_, tableData, err := rename.GetFileInformation(sourceNames, templateString, debug)
+	_, tableData, err := rename.GetFileInformation(sourceNames, templateString, separator, debug)
 	if err != nil {
 		t.Error(err)
 	}

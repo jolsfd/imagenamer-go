@@ -65,6 +65,7 @@ func renameCommand(cmd *cobra.Command, paths []string) {
 	templateString := viper.GetString(config.Template)
 	extensions := viper.GetStringSlice(config.Extensions)
 	safePrefixes := viper.GetStringSlice(config.SafeStrings)
+	separator := viper.GetString(config.Separator)
 
 	// Debug:
 	if debug {
@@ -86,7 +87,7 @@ func renameCommand(cmd *cobra.Command, paths []string) {
 		checkError(err)
 
 		// Get files informations from source names.
-		files, tableData, err := rename.GetFileInformation(sourceNames, templateString, debug)
+		files, tableData, err := rename.GetFileInformation(sourceNames, templateString, separator, debug)
 		checkError(err)
 
 		// Append to sclice.

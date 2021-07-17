@@ -41,14 +41,20 @@ func TestDefaultConfig(t *testing.T) {
 	wantTemplateString := "IMG_{{.DateTime}}_{{.CameraModel}}"
 	wantExtensions := []string{".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".dng"}
 	wantSafePrefixes := []string{"IMG"}
+	wantSeparator := "~"
 
 	// got
 	templateString := viper.GetString(config.Template)
 	extensions := viper.GetStringSlice(config.Extensions)
 	safePrefixes := viper.GetStringSlice(config.SafeStrings)
+	separator := viper.GetString(config.Separator)
 
 	if wantTemplateString != templateString {
 		t.Errorf("Template = %s; want = %s;", templateString, wantTemplateString)
+	}
+
+	if wantSeparator != separator {
+		t.Errorf("Separator = %s; want = %s;", separator, wantSeparator)
 	}
 
 	for index, extension := range extensions {
@@ -105,11 +111,11 @@ func TestWriteConfigFile(t *testing.T) {
 	err = config.WriteConfigFile(configDir, configFile)
 	checkError(err, t)
 
-	err = os.Remove(configFile)
-	checkError(err, t)
+	// err = os.Remove(configFile)
+	// checkError(err, t)
 
-	err = os.Remove(configDir)
-	checkError(err, t)
+	// err = os.Remove(configDir)
+	// checkError(err, t)
 }
 
 func checkError(err error, t *testing.T) {

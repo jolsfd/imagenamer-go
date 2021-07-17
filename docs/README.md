@@ -91,3 +91,20 @@ image.jpg         false
 IMG_image.png     true
 tes.png           false
 ```
+
+### Copy Separator
+
+The copy_separator specifies which character is to be used to separate the copy number from the file name.
+
+**Example:**
+
+*copy_separator:* `"~"`
+
+*Output:*
+
+```
+test_image.jpg
+test_image~1.jpg
+test_image~2.jpg
+test.jpg
+```

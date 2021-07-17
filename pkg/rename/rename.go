@@ -84,7 +84,7 @@ func (f *FileInformation) GetNewFileName(templateString string, imageExif *exif.
 }
 
 // GetTargetName assign the target name into a FileAttributes struct.
-func (f *FileInformation) GetTargetName(targetNames []string) error {
+func (f *FileInformation) GetTargetName(targetNames []string, separator string) error {
 	// Build target name.
 	f.TargetName = filepath.Join(f.Path, f.NewFileName+f.FileExtension)
 
@@ -94,7 +94,7 @@ func (f *FileInformation) GetTargetName(targetNames []string) error {
 		if f.SourceName == f.TargetName {
 			break
 		} else {
-			newFileName := f.NewFileName + "~" + strconv.Itoa(f.CopyNumber)
+			newFileName := f.NewFileName + separator + strconv.Itoa(f.CopyNumber)
 			f.TargetName = filepath.Join(f.Path, newFileName+f.FileExtension)
 			f.CopyNumber++
 		}
@@ -165,7 +165,7 @@ func ListImagesInDir(rootPath string, extensions []string, excludedDirs []string
 }
 
 // GetFileInformation returns file informations from source names.
-func GetFileInformation(sourceNames []string, templateString string, debug bool) (files []FileInformation, tableData [][]string, err error) {
+func GetFileInformation(sourceNames []string, templateString string, separator string, debug bool) (files []FileInformation, tableData [][]string, err error) {
 	var targetNames []string
 
 	for _, sourceName := range sourceNames {
@@ -196,7 +196,7 @@ func GetFileInformation(sourceNames []string, templateString string, debug bool)
 		}
 
 		// Build new target name.
-		err = image.GetTargetName(targetNames)
+		err = image.GetTargetName(targetNames, separator)
 		if err != nil {
 			image.Status = color.RedString(StatusFail)
 			tableData = append(tableData, []string{image.FileName + image.FileExtension, image.NewFileName + image.FileExtension, image.Status})

@@ -54,4 +54,5 @@ func DefaultConfig() {
 	viper.SetDefault(Template, DefaultTemplateString)
 	viper.SetDefault(Extensions, DefaultExtensions)
 	viper.SetDefault(SafeStrings, DefaultSafePrefixes)
+	viper.SetDefault(Separator, DefaultSeparator)
 }
