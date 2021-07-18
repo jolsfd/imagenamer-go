@@ -122,7 +122,7 @@ func renameCommand(cmd *cobra.Command, paths []string) {
 			err = rename.RenameImages(filesInDir)
 			checkError(err)
 		}
-		fmt.Println(color.GreenString("All images succesfully renamed."))
+		fmt.Println(color.GreenString("All images successfully renamed."))
 	} else {
 		fmt.Println(color.RedString("No images were renamed."))
 	}

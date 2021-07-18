@@ -1,4 +1,4 @@
-// doc holds all constants for documentation.
+// Package doc holds all constants for documentation.
 package doc
 
 // Root Command
@@ -22,9 +22,8 @@ argument is given is the workdirectory.`
 	ExcludeFlag    = "Exclude folders in given paths"
 	SafeRenameFlag = "Disable or enable safe rename function (default: true)"
 	YesFlag        = "Confirm all question with yes (default: false)"
+	WaitMessage    = "Please wait..."
 )
 
-// Version
+// Version of the program.
 const Version = "0.0.0"
-
-const WaitMessage = "Please wait..."

@@ -67,7 +67,7 @@ func init() {
 func initConfig() {
 	var err error
 
-	// Initalize config.
+	// Initialize config.
 	viper.SetConfigName(config.DefaultConfigName)
 	viper.SetConfigType(config.DefaultConfigType)
 

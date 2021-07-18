@@ -18,6 +18,7 @@ import (
 	"github.com/rwcarlsen/goexif/exif"
 )
 
+// FileInformation is a struct for file informations like target name and source name.
 type FileInformation struct {
 	Path          string
 	SourceName    string
@@ -29,12 +30,13 @@ type FileInformation struct {
 	Status        string
 }
 
+// FileNameTemplate is a struct for the template.
 type FileNameTemplate struct {
 	CameraModel string
 	DateTime    string
 }
 
-// BuildFileAttributes takes an source name as string. It assign values into the FileAttributes struct.
+// BuildFileInformation takes an source name as string. It assign values into the FileAttributes struct.
 func (f *FileInformation) BuildFileInformation(sourceName string) {
 	// Get Values.
 	baseName := filepath.Base(sourceName)
@@ -116,11 +118,12 @@ func find(slice []string, val string) bool {
 // checkSafePrefix checks if a file name contains a safe prefix.
 func checkSafeStrings(baseName string, safeStrings []string) bool {
 	for _, safeString := range safeStrings {
-		match, _ := regexp.MatchString(safeString, baseName)
+		match, err := regexp.MatchString(safeString, baseName)
+		if err != nil {
+			log.Fatal(err)
+		}
 		if match {
 			return match
-		} else {
-			continue
 		}
 	}
 
