@@ -14,7 +14,7 @@
 ImageNamer-Go is written in Go, so you can install it through `go install`:
 
 ```bash
-go install github.com/jolsfd/imagenamer-go
+go install github.com/jolsfd/imagenamer-go@latest
 ```
 
 Pre-compiled binaries for Linux and Windows on the [releases page](https://github.com/jolsfd/imagenamer-go/releases/latest). After you download the file archive for your operating system and architecture extract the file archive:
