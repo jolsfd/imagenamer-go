@@ -127,7 +127,7 @@ func renameCommand(cmd *cobra.Command, paths []string) {
 		}
 
 		elapsed := time.Since(start)
-		fmt.Printf(color.GreenString("All images successfully renamed in %v."), elapsed)
+		fmt.Printf(color.GreenString("All images successfully renamed in %v.\n"), elapsed)
 	} else {
 		fmt.Println(color.RedString("No images were renamed."))
 	}
