@@ -24,6 +24,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/fatih/color"
 	"github.com/jolsfd/imagenamer-go/pkg/config"
@@ -118,11 +119,15 @@ func renameCommand(cmd *cobra.Command, paths []string) {
 
 	// Rename.
 	if confirm {
+		start := time.Now()
+
 		for _, filesInDir := range filesInDirs {
 			err = rename.RenameImages(filesInDir)
 			checkError(err)
 		}
-		fmt.Println(color.GreenString("All images successfully renamed."))
+
+		elapsed := time.Since(start)
+		fmt.Printf(color.GreenString("All images successfully renamed in %v."), elapsed)
 	} else {
 		fmt.Println(color.RedString("No images were renamed."))
 	}
