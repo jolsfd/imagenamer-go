@@ -5,7 +5,6 @@
 [![License](https://img.shields.io/github/license/jolsfd/imagenamer-go.svg)](https://github.com/jolsfd/imagenamer-go/blob/main/LICENSE)
 [![Issues](https://img.shields.io/github/issues/jolsfd/imagenamer-go.svg)](https://github.com/jolsfd/imagenamer-go/issues/)
 [![Pull-requests](https://img.shields.io/github/issues-pr/jolsfd/imagenamer-go.svg)](https://github.com/jolsfd/imagenamer-go/pulls)
-[![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/jolsfd/imagenamer-go)
 
 # ImageNamer-Go
 
